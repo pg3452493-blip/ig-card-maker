@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@600;700;800&family=Poppins:wght@600;700;800&display=swap');
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    width: 1080px;
+    height: 1350px;
+    overflow: hidden;
+    font-family: 'Noto Sans Devanagari', 'Poppins', sans-serif;
+    background: #07132b;
+    color: #ffffff;
+  }
+
+  .card {
+    width: 1080px;
+    height: 1350px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, #091936 0%, #061024 100%);
+    position: relative;
+  }
+
+  .top-media {
+    position: relative;
+    width: 100%;
+    height: 610px;
+    overflow: hidden;
+    background: #0d2247;
+  }
+
+  .top-media img.main-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+  }
+
+  .logo-badge {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(5, 11, 24, 0.92);
+    border: 2px solid #f5b727;
+    border-radius: 16px;
+    padding: 8px 16px 8px 8px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55);
+  }
+
+  .logo-badge img {
+    width: 66px;
+    height: 66px;
+    border-radius: 12px;
+    object-fit: cover;
+    display: block;
+    background: #000000;
+  }
+
+  .logo-label {
+    font-size: 22px;
+    font-weight: 800;
+    color: #ffd56b;
+    letter-spacing: 0.6px;
+  }
+
+  .heading-bar {
+    background: linear-gradient(90deg, #b91c1c 0%, #dc2626 55%, #991b1b 100%);
+    padding: 22px 36px;
+    border-top: 4px solid #f5b727;
+    border-bottom: 4px solid #f5b727;
+    text-align: center;
+  }
+
+  .heading-text {
+    font-size: 44px;
+    font-weight: 800;
+    line-height: 1.25;
+    color: #ffffff;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  }
+
+  .quote-section {
+    flex: 1;
+    padding: 36px 46px 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .quote-box {
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 36, 74, 0.92);
+    border: 2px solid rgba(245, 183, 39, 0.45);
+    border-radius: 26px;
+    padding: 34px 40px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .quote-mark-open {
+    font-size: 74px;
+    line-height: 0.6;
+    color: #f5b727;
+    font-weight: 800;
+    margin-bottom: 12px;
+  }
+
+  .quote-text {
+    font-size: 35px;
+    font-weight: 700;
+    line-height: 1.52;
+    color: #f8fafc;
+    max-height: 430px;
+    overflow: hidden;
+  }
+
+  .quote-mark-close {
+    font-size: 74px;
+    line-height: 0.4;
+    color: #f5b727;
+    font-weight: 800;
+    align-self: flex-end;
+    margin-top: 16px;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="top-media">
+      <img class="main-photo" src="{{image_url}}" alt="Cricket News">
+      <div class="logo-badge">
+        <img src="{{logo_url}}" alt="CCN Logic Logo" onerror="this.style.display='none'">
+        <span class="logo-label">CCN LOGIC</span>
+      </div>
+    </div>
+
+    <div class="heading-bar">
+      <div class="heading-text">{{heading}}</div>
+    </div>
+
+    <div class="quote-section">
+      <div class="quote-box">
+        <div class="quote-mark-open">“</div>
+        <div class="quote-text">{{quote}}</div>
+        <div class="quote-mark-close">”</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
