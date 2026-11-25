@@ -1,0 +1,60 @@
+name: Generate IG Card
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_url:
+        required: true
+        type: string
+      heading:
+        required: true
+        type: string
+      quote:
+        required: true
+        type: string
+      callback_webhook:
+        required: false
+        type: string
+
+jobs:
+  build-card:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Render IG Card
+        run: node render_card.js "${{ inputs.image_url }}" "${{ inputs.heading }}" "${{ inputs.quote }}"
+
+      - name: Upload to WordPress Media
+        id: wp_upload
+        env:
+          WP_URL: ${{ secrets.WP_URL }}
+          WP_USER: ${{ secrets.WP_USER }}
+          WP_APP_PASS: ${{ secrets.WP_APP_PASS }}
+        run: |
+          RESP=$(curl -s -X POST "$WP_URL/wp-json/wp/v2/media" \
+            -u "$WP_USER:$WP_APP_PASS" \
+            -H "Content-Disposition: attachment; filename=ig_card_$(date +%s).png" \
+            -H "Content-Type: image/png" \
+            --data-binary @output/ig_card.png)
+          CARD_URL=$(echo "$RESP" | node -e "const d=JSON.parse(require('fs').readFileSync(0,'utf8')); console.log(d.source_url || '');")
+          echo "card_url=$CARD_URL" >> $GITHUB_OUTPUT
+          echo "Uploaded URL: $CARD_URL"
+
+      - name: Send URL back to Make Webhook
+        if: ${{ inputs.callback_webhook != '' }}
+        env:
+          CARD_URL: ${{ steps.wp_upload.outputs.card_url }}
+        run: |
+          curl -s -X POST "${{ inputs.callback_webhook }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"card_url\":\"$CARD_URL\"}"
