@@ -83,22 +83,28 @@ async function generateCard({ imageUrl, heading, quote, outputPath }) {
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
     );
     await page.setViewport({ width: 1080, height: 1350, deviceScaleFactor: 1 });
-    await page.setContent(html, { waitUntil: "domcontentloaded", timeout: 15000 });
+    await page.setContent(html, { waitUntil: "networkidle2", timeout: 15000 });
 
-    // Images ke load ya timeout hone ka wait (max 8s)
+    // Webfonts aur images dono ke load hone ka wait (max 8s)
     await page.evaluate(async () => {
+      const fontsReady = document.fonts && document.fonts.ready
+        ? document.fonts.ready
+        : Promise.resolve();
+
       const imgs = Array.from(document.querySelectorAll("img"));
+      const imgsReady = Promise.all(
+        imgs.map((img) =>
+          img.complete
+            ? Promise.resolve()
+            : new Promise((res) => {
+                img.addEventListener("load", res, { once: true });
+                img.addEventListener("error", res, { once: true });
+              })
+        )
+      );
+
       await Promise.race([
-        Promise.all(
-          imgs.map((img) =>
-            img.complete
-              ? Promise.resolve()
-              : new Promise((res) => {
-                  img.addEventListener("load", res, { once: true });
-                  img.addEventListener("error", res, { once: true });
-                })
-          )
-        ),
+        Promise.all([fontsReady, imgsReady]),
         new Promise((res) => setTimeout(res, 8000))
       ]);
     });
