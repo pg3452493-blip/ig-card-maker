@@ -18,6 +18,7 @@ on:
       callback_webhook:
         required: false
         type: string
+        default: "https://hook.us2.make.com/uv9e932x3no9q9xv6cj99y3clwlu42pp"
 
 jobs:
   build-card:
@@ -67,11 +68,10 @@ jobs:
           echo "Uploaded URL: $CARD_URL"
 
       - name: Send URL and Caption back to Make Webhook
-        if: ${{ inputs.callback_webhook != '' }}
         env:
           CARD_URL: ${{ steps.wp_upload.outputs.card_url }}
           CAPTION_TEXT: ${{ inputs.caption }}
-          WEBHOOK_URL: ${{ inputs.callback_webhook }}
+          WEBHOOK_URL: ${{ inputs.callback_webhook || 'https://hook.us2.make.com/uv9e932x3no9q9xv6cj99y3clwlu42pp' }}
         run: |
           node -e '
             const https = require("https");
