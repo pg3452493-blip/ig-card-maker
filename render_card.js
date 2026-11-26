@@ -36,17 +36,40 @@ async function generateCard({ imageUrl, heading, quote, outputPath }) {
   let logoUrl = "";
 
   if (logoPath) {
+    const ext = path.extname(logoPath).toLowerCase().replace(".", "");
+    const mime = ext === "png" ? "image/png" : ext === "webp" ? "image/webp" : "image/jpeg";
     const base64 = fs.readFileSync(logoPath).toString("base64");
-    logoUrl = `data:image/jpeg;base64,${base64}`;
+    logoUrl = `data:${mime};base64,${base64}`;
   }
+
+  const safeImageUrl = (imageUrl && imageUrl.trim()) || logoUrl;
+  const safeHeading = (heading && heading.trim()) || "Cricket Update";
+  const safeQuote = (quote && quote.trim()) || "Latest match highlights and updates";
+
+  console.log("Inputs received:", {
+    imageUrl: safeImageUrl.startsWith("data:") ? "[base64-fallback]" : safeImageUrl,
+    heading: safeHeading,
+    quote: safeQuote
+  });
 
   let html = fs.readFileSync(templatePath, "utf8");
 
   html = html
-    .replace(/\{\{image_url\}\}/g, escapeHtml(imageUrl || ""))
+    .replace(/\{\{image_url\}\}/g, escapeHtml(safeImageUrl))
     .replace(/\{\{logo_url\}\}/g, escapeHtml(logoUrl))
-    .replace(/\{\{heading\}\}/g, escapeHtml(heading || ""))
-    .replace(/\{\{quote\}\}/g, escapeHtml(quote || "").replace(/\n/g, "<br>"));
+    .replace(/\{\{heading\}\}/g, escapeHtml(safeHeading))
+    .replace(/\{\{quote\}\}/g, escapeHtml(safeQuote).replace(/\n/g, "<br>"));
+
+  // Agar image load fail ho toh fallback logo/image par switch kar de
+  if (logoUrl) {
+    html = html.replace(
+      /<img\b([^>]*?)>/gi,
+      (match, attrs) => {
+        if (/onerror=/i.test(attrs)) return match;
+        return `<img${attrs} onerror="this.onerror=null;this.src='${logoUrl}';">`;
+      }
+    );
+  }
 
   const browser = await puppeteer.launch({
     headless: "new",
@@ -55,8 +78,30 @@ async function generateCard({ imageUrl, heading, quote, outputPath }) {
 
   try {
     const page = await browser.newPage();
+    page.setDefaultTimeout(15000);
+    await page.setUserAgent(
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+    );
     await page.setViewport({ width: 1080, height: 1350, deviceScaleFactor: 1 });
-    await page.setContent(html, { waitUntil: "networkidle0", timeout: 30000 });
+    await page.setContent(html, { waitUntil: "domcontentloaded", timeout: 15000 });
+
+    // Images ke load ya timeout hone ka wait (max 8s)
+    await page.evaluate(async () => {
+      const imgs = Array.from(document.querySelectorAll("img"));
+      await Promise.race([
+        Promise.all(
+          imgs.map((img) =>
+            img.complete
+              ? Promise.resolve()
+              : new Promise((res) => {
+                  img.addEventListener("load", res, { once: true });
+                  img.addEventListener("error", res, { once: true });
+                })
+          )
+        ),
+        new Promise((res) => setTimeout(res, 8000))
+      ]);
+    });
 
     fs.mkdirSync(path.dirname(outputPath), { recursive: true });
     await page.screenshot({ path: outputPath, type: "png" });
