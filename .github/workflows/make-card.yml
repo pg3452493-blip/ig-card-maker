@@ -18,7 +18,7 @@ on:
       callback_webhook:
         required: false
         type: string
-        default: "https://hook.us2.make.com/uv9e932x3no9q9xv6cj99y3clwlu42pp"
+        default: "https://hook.us2.make.com/ws21d8m5pdssfv87dxukv3k6giraxdhp"
 
 jobs:
   build-card:
