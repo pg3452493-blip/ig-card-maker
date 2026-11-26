@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       image_url:
-        required: true
+        required: false
         type: string
       heading:
         required: true
@@ -35,7 +35,12 @@ jobs:
         run: npm install
 
       - name: Render IG Card
-        run: node render_card.js "${{ inputs.image_url }}" "${{ inputs.heading }}" "${{ inputs.quote }}"
+        run: |
+          IMG_URL="${{ inputs.image_url }}"
+          if [ -z "$IMG_URL" ]; then
+            IMG_URL="https://ccnlogic.com/wp-content/uploads/2024/05/cropped-cropped-ccn-logo-1.png"
+          fi
+          node render_card.js "$IMG_URL" "${{ inputs.heading }}" "${{ inputs.quote }}"
 
       - name: Upload to WordPress Media
         id: wp_upload
