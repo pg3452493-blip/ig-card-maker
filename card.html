@@ -29,10 +29,11 @@
     position: relative;
   }
 
+  /* ~60% of 1350px = 810px */
   .top-media {
     position: relative;
     width: 100%;
-    height: 520px;
+    height: 810px;
     overflow: hidden;
     background: #0d2247;
     flex-shrink: 0;
@@ -48,8 +49,8 @@
 
   .logo-badge {
     position: absolute;
-    top: 22px;
-    right: 22px;
+    top: 24px;
+    right: 24px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -61,8 +62,8 @@
   }
 
   .logo-badge img {
-    width: 62px;
-    height: 62px;
+    width: 64px;
+    height: 64px;
     border-radius: 12px;
     object-fit: cover;
     display: block;
@@ -70,52 +71,39 @@
   }
 
   .logo-label {
-    font-size: 21px;
+    font-size: 22px;
     font-weight: 800;
     color: #ffd56b;
     letter-spacing: 0.6px;
   }
 
-  .heading-bar {
-    background: linear-gradient(90deg, #991b1b 0%, #dc2626 50%, #991b1b 100%);
-    padding: 18px 34px;
-    border-top: 4px solid #f5b727;
-    border-bottom: 4px solid #f5b727;
-    text-align: center;
-    flex-shrink: 0;
-    z-index: 2;
-  }
-
-  .heading-text {
-    font-size: 40px;
-    font-weight: 800;
-    line-height: 1.22;
-    color: #ffffff;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-  }
-
-  .quote-section {
-    flex: 1;
-    padding: 68px 42px 34px;
+  /* ~40% of 1350px = 540px */
+  .bottom-section {
+    height: 540px;
+    padding: 18px 36px 28px;
     display: flex;
-    align-items: stretch;
-    justify-content: center;
-    position: relative;
+    flex-direction: column;
+    gap: 14px;
+    background: linear-gradient(180deg, #081630 0%, #050c1c 100%);
+    flex-shrink: 0;
   }
 
-  /* Circular player badge overlapping top-center of the quote box */
+  /* Top row: Left circular badge + Right red heading box */
+  .header-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-shrink: 0;
+  }
+
   .player-circle-wrap {
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 118px;
-    height: 118px;
+    width: 112px;
+    height: 112px;
     border-radius: 50%;
     padding: 4px;
     background: linear-gradient(135deg, #ef4444, #f5b727);
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.65);
-    z-index: 4;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55);
+    flex-shrink: 0;
   }
 
   .player-circle-wrap img {
@@ -124,74 +112,80 @@
     border-radius: 50%;
     object-fit: cover;
     object-position: center 18%;
-    transform: scale(1.22);
+    transform: scale(1.18);
     border: 3px solid #07132b;
     display: block;
     background: #10264e;
   }
 
+  .red-heading-box {
+    flex: 1;
+    min-height: 104px;
+    background: linear-gradient(90deg, #b91c1c 0%, #dc2626 60%, #991b1b 100%);
+    border: 2px solid #f5b727;
+    border-radius: 18px;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+  }
+
+  .heading-text {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #ffffff;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  }
+
+  /* Compact dark box with larger description text */
   .quote-box {
-    width: 100%;
-    height: 100%;
-    background: rgba(13, 31, 65, 0.95);
+    flex: 1;
+    background: rgba(13, 31, 65, 0.96);
     border: 2px solid rgba(245, 183, 39, 0.45);
-    border-radius: 26px;
-    padding: 66px 36px 26px;
+    border-radius: 22px;
+    padding: 16px 26px;
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
-  }
-
-  .quote-top-row {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 6px;
+    justify-content: center;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
   }
 
   .quote-mark-open {
-    font-size: 76px;
-    line-height: 0.55;
+    position: absolute;
+    top: 6px;
+    left: 16px;
+    font-size: 46px;
+    line-height: 0.7;
     color: #ef4444;
     font-weight: 800;
-    text-shadow: 0 3px 10px rgba(239, 68, 68, 0.35);
-  }
-
-  .quote-accent-line {
-    height: 3px;
-    flex: 1;
-    max-width: 120px;
-    background: linear-gradient(90deg, #ef4444, transparent);
-    border-radius: 2px;
   }
 
   .quote-text {
-    font-size: 27px;
-    font-weight: 600;
-    line-height: 1.44;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.38;
     color: #f8fafc;
+    padding: 8px 28px;
+    text-align: left;
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 9;
+    -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
   }
 
-  .quote-bottom-row {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 14px;
-    margin-top: 8px;
-  }
-
   .quote-mark-close {
-    font-size: 76px;
-    line-height: 0.5;
+    position: absolute;
+    bottom: 2px;
+    right: 16px;
+    font-size: 46px;
+    line-height: 0.6;
     color: #ef4444;
     font-weight: 800;
-    text-shadow: 0 3px 10px rgba(239, 68, 68, 0.35);
   }
 </style>
 </head>
@@ -205,26 +199,21 @@
       </div>
     </div>
 
-    <div class="heading-bar">
-      <div class="heading-text">{{heading}}</div>
-    </div>
+    <div class="bottom-section">
+      <div class="header-row">
+        <div class="player-circle-wrap">
+          <img src="{{image_url}}" alt="Player Highlight" onerror="this.onerror=null;this.src='{{logo_url}}';">
+        </div>
 
-    <div class="quote-section">
-      <div class="player-circle-wrap">
-        <img src="{{image_url}}" alt="Player Highlight" onerror="this.onerror=null;this.src='{{logo_url}}';">
+        <div class="red-heading-box">
+          <div class="heading-text">{{heading}}</div>
+        </div>
       </div>
 
       <div class="quote-box">
-        <div class="quote-top-row">
-          <span class="quote-mark-open">“</span>
-          <span class="quote-accent-line"></span>
-        </div>
-
+        <span class="quote-mark-open">“</span>
         <div class="quote-text">{{quote}}</div>
-
-        <div class="quote-bottom-row">
-          <span class="quote-mark-close">”</span>
-        </div>
+        <span class="quote-mark-close">”</span>
       </div>
     </div>
   </div>
