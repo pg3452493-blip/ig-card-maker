@@ -7,10 +7,10 @@ on:
         required: false
         type: string
       heading:
-        required: true
+        required: false
         type: string
       quote:
-        required: true
+        required: false
         type: string
       caption:
         required: false
@@ -40,7 +40,15 @@ jobs:
           if [ -z "$IMG_URL" ]; then
             IMG_URL="https://ccnlogic.com/wp-content/uploads/2024/05/cropped-cropped-ccn-logo-1.png"
           fi
-          node render_card.js "$IMG_URL" "${{ inputs.heading }}" "${{ inputs.quote }}"
+          HEADING_TXT="${{ inputs.heading }}"
+          if [ -z "$HEADING_TXT" ]; then
+            HEADING_TXT="Cricket Update"
+          fi
+          QUOTE_TXT="${{ inputs.quote }}"
+          if [ -z "$QUOTE_TXT" ]; then
+            QUOTE_TXT="Latest match highlights and updates"
+          fi
+          node render_card.js "$IMG_URL" "$HEADING_TXT" "$QUOTE_TXT"
 
       - name: Upload to WordPress Media
         id: wp_upload
